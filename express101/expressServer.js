@@ -1,85 +1,15 @@
-const http = require('http');
-const fs = require('fs');
+import express from 'express';
 
-/**
- * The http module has a createServer method
- * it takes 1 arg:
- * A callback which has 2 args: request, response objects
- */
+// An app is the express function (CreateApplication inside the express module)
+const app = express();
 
- function defaultResponse(res) {
-  res.writeHead(404, {
-    'content-type': 'text/html'
-  });
-  // http message
-  // 1. start-line 
-  // 2. header
-  // 3. body
-  // writeHead takes 2 args:
-  // 1 status code
-  // 2 object for the mime-type
-  res.write('<h1>Page not found</h1>');
-  res.end();
- }
-
-const server = http.createServer((req ,res) => {
-  console.log(req.url);
-  switch(req.url) {
-    case '/styles.css':
-      res.writeHead(200, {
-        'content-type': 'text/css'
-      });
-      // http message
-      // 1. start-line 
-      // 2. header
-      // 3. body
-      // writeHead takes 2 args:
-      // 1 status code
-      // 2 object for the mime-type
-      const cssFile = fs.readFileSync('styles.css');
-      res.write(cssFile);
-      res.end();
-      break;
-    case '/Runtime-logo-Node.jpg':
-      res.writeHead(200, {
-        'content-type': 'image/jpg'
-      });
-      // http message
-      // 1. start-line 
-      // 2. header
-      // 3. body
-      // writeHead takes 2 args:
-      // 1 status code
-      // 2 object for the mime-type
-      const image = fs.readFileSync('Runtime-logo-Node.jpg');
-      res.write(image);
-      res.end();
-      break;
-    case '/':
-      res.writeHead(200, {
-        'content-type': 'text/html'
-      });
-      // http message
-      // 1. start-line 
-      // 2. header
-      // 3. body
-      // writeHead takes 2 args:
-      // 1 status code
-      // 2 object for the mime-type
-      const homepageHTML = fs.readFileSync('node.html');
-      res.write(homepageHTML);
-      res.end();
-      break
-    default:
-      defaultResponse(res)      
-  }
-  // console.log(req);  
-  
+// all is a method, and it takes 2 args:
+// 1. route
+// 2. callback to run if the route is requested
+app.all('*', (req ,res) => {
+  // express handles the basic headers (status code, mime-type)
+  // express handles the end of the response
+  res.send(`<h1>This is home page</h1>`);
 });
 
-/**
- * createServer returns an object with a listen method
- * listen takes 1 arg:
- * . port to listen for http traffic on
- */
-server.listen(3000);
+app.listen(3000);
